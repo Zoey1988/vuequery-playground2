@@ -69,10 +69,8 @@ const {
 const modalIsOpen = ref<boolean>(false);
 const selectedPost = ref<number>();
 
-function getComments() {
-  return api
-    .get<Comment[]>(`posts/${selectedPost.value}/comments`)
-    .then(({ data }) => data);
+function getComments(id: number) {
+  return api.get<Comment[]>(`posts/${id}/comments`).then(({ data }) => data);
 }
 
 // TODO-1 Query for comments, only when needed
@@ -82,7 +80,7 @@ const {
   isLoading: postCommentsLoading,
 } = useQuery({
   queryKey: ["post-comments", selectedPost],
-  queryFn: getComments,
+  queryFn: ({ queryKey }) => getComments(queryKey[1]),
   staleTime: 60000,
 });
 
